@@ -57,7 +57,7 @@ with sync_playwright() as p:
     print('audit:'); [print('  ',a['role'],a['action'],a.get('status')) for a in r['audit']]
     em=pg.evaluate("MaleeCMG.state.emails.map(e=>e.to+' | '+e.subject)"); print('emails:',em)
     # CMG inbox
-    pg.select_option('#roleSel','CMG'); pg.wait_for_timeout(200); print('CMG bell',pg.inner_text('#bellCount'))
+    pg.select_option('#roleSel','CMG'); pg.wait_for_timeout(200)
     pg.goto(URL+'#/inbox'); assert 'Costing completed' in pg.inner_text('#view')
     # Finance send-back path on seeded CMG-2026-0002
     pg.select_option('#roleSel','FIN'); pg.goto(URL+'#/req/CMG-2026-0002'); pg.wait_for_timeout(300)

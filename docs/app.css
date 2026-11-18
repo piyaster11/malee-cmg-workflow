@@ -1,6 +1,6 @@
 :root{--g:#0f6b4a;--g2:#e7f3ee;--ink:#1d2a24;--mut:#62706a;--line:#dfe6e2;--bg:#f7f5ef;--card:#fff;--amber:#b7791f;--red:#b42318;--blue:#1d4ed8}
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,"Noto Sans Thai",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+body{margin:0;overflow-wrap:break-word;font-family:Inter,"Noto Sans Thai",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
 a{color:var(--g)}
 .demo-banner{background:#fff3cd;color:#7a5600;text-align:center;font-size:12px;padding:5px 8px;border-bottom:1px solid #f0d98c;font-weight:600}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:var(--g);color:#fff;gap:10px;flex-wrap:wrap}
@@ -40,7 +40,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .s-Draft{background:#eef0f2;color:#475467}.s-Submitted{background:#e0ecff;color:#1d4ed8}.s-Informulation{background:#f3e8ff;color:#7e22ce}
 .s-SenttoFinance{background:#fff4e0;color:#b45309}.s-Costingdone{background:#dcfce7;color:#15803d}.s-Returned{background:#fee4e2;color:#b42318}
-.stat{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer}
+.stat{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer;text-align:left;font:inherit;color:inherit;min-width:0}.stat[aria-pressed=true]{outline:2px solid var(--g)}.stat .pill{white-space:normal}
 .stat b{font-size:26px;display:block}.stat small{color:var(--mut)}
 .pipe{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 2px}
 .pipe .st{flex:1;min-width:110px;text-align:center;padding:7px 4px;border-radius:8px;background:#eef1ef;color:#6b7a73;font-size:12px;font-weight:600;position:relative}
@@ -66,3 +66,10 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .line-in{min-width:70px}
 .print-only{display:none}
 @media print{.no-print,.nav,.topbar,.demo-banner,.foot,.actions,.btn{display:none!important}.print-only{display:block}body{background:#fff}.card{border:1px solid #ccc;break-inside:avoid}main{max-width:none}}
+
+:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.grid>*{min-width:0}
+th{overflow-wrap:normal}
+.kv div,.audit li,.email pre,.notif,.warnbox{overflow-wrap:anywhere}
+.tbl-wrap table{min-width:600px}
+td b{white-space:nowrap}
