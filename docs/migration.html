@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migration to Malee systems — CMG Workflow</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%230f6b4a'/><circle cx='50' cy='50' r='22' fill='%23fff8ec'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<style>main{max-width:960px}.opt h3{margin-top:0}td,th{font-size:13px}.rec{border:2px solid var(--g)}ol li,ul li{margin-bottom:5px}</style>
+</head><body>
+<div class="demo-banner no-print">Planning guide for the CMG Workflow prototype · Timelines and effort are ESTIMATES to be confirmed with Malee IT</div>
+<header class="topbar no-print"><div class="brand"><span class="logo"></span><div><b>Migration to Malee systems</b><small>แนวทางย้ายระบบเข้าสู่ระบบของมาลี</small></div></div><a class="btn sm sec" style="background:#fff" href="./">← Back to prototype</a></header>
+<main>
+<h1>Moving the CMG → R&amp;D → Finance workflow onto Malee systems</h1>
+<p class="sub">Written for management and IT. The prototype proves the flow; production needs Malee's own logins, storage and notifications. Nothing below assumes which systems Malee runs today — please confirm with IT.</p>
+
+<div class="card rec"><h2 style="margin-top:0">1. Feasibility summary <span class="th">สรุปความเป็นไปได้</span></h2>
+<p><b>Feasible, low-to-medium effort.</b> It is a standard request → approval → costing workflow with one shared reference list (material codes). No unusual technology is needed.</p>
+<div class="grid g3"><div><b>Recommended</b><br>Option A (Microsoft 365) <i>if</i> Malee already uses Microsoft 365 / Outlook / Teams. Otherwise Option B (Google) or C (custom).</div>
+<div><b>Rough effort (estimate)</b><br>~6–10 weeks to go live for one product family (coconut), incl. a pilot.</div>
+<div><b>Team (estimate)</b><br>1 business owner (CMG lead) · 1 Power Platform / app developer · part-time IT admin (SSO, permissions) · key users from R&amp;D and Finance-Factory for testing.</div></div>
+<h3>Phased timeline (estimates)</h3>
+<table><thead><tr><th>Phase</th><th>What happens</th><th>Duration (est.)</th></tr></thead><tbody>
+<tr><td>0. Agree</td><td>Walk CMG, R&amp;D, Finance through the prototype; freeze form fields, statuses, costing formula; IT picks platform</td><td>1–2 weeks</td></tr>
+<tr><td>1. Build</td><td>Tables, forms, approval flow, notifications, role permissions</td><td>3–4 weeks</td></tr>
+<tr><td>2. Data</td><td>Load full material code list (CSV or ERP link), standard costs, users and roles</td><td>1 week (parallel)</td></tr>
+<tr><td>3. Pilot</td><td>One real coconut CMG request end-to-end; fix gaps</td><td>1–2 weeks</td></tr>
+<tr><td>4. Go live</td><td>All coconut requests in the system; email route retired; extend to other product lines later</td><td>1 week + ongoing</td></tr>
+</tbody></table></div>
+
+<h2>Options compared <span class="th">ทางเลือก</span></h2>
+<div class="tbl-wrap card"><table><thead><tr><th></th><th>A · Microsoft 365</th><th>B · Google Workspace</th><th>C · Custom web app</th></tr></thead><tbody>
+<tr><td><b>Data</b></td><td>SharePoint Lists (simple) or Dataverse (stronger, extra licence)</td><td>Google Sheets, or AppSheet database</td><td>Postgres (e.g. Supabase) on Malee cloud/server</td></tr>
+<tr><td><b>Form / screens</b></td><td>Power Apps (canvas or model-driven)</td><td>AppSheet app or Apps Script web app</td><td>This prototype's screens, re-used with a real API</td></tr>
+<tr><td><b>Workflow & approvals</b></td><td>Power Automate approvals</td><td>AppSheet automations / Apps Script triggers</td><td>Server code / database triggers</td></tr>
+<tr><td><b>Notifications</b></td><td>Outlook email + Teams messages</td><td>Gmail + Google Chat</td><td>Email (SMTP/Graph), Teams or LINE webhooks</td></tr>
+<tr><td><b>Login (SSO)</b></td><td>Entra ID (Microsoft accounts) — built in</td><td>Google accounts — built in</td><td>SSO via Entra ID or Google (OIDC/SAML)</td></tr>
+<tr><td><b>Speed to build</b></td><td>Fast (low-code)</td><td>Fast (low-code)</td><td>Slower; most flexible</td></tr>
+<tr><td><b>Ongoing support</b></td><td>Internal IT / citizen developer</td><td>Internal IT / citizen developer</td><td>Needs a developer to maintain</td></tr>
+<tr><td><b>Best when</b></td><td>Malee is on Microsoft 365</td><td>Malee is on Google Workspace</td><td>Need full control, heavy ERP integration, or external users</td></tr>
+</tbody></table></div>
+
+<div class="card opt"><h3>Option A — Microsoft 365 (SharePoint / Dataverse + Power Apps + Power Automate)</h3><ul>
+<li>Each table below becomes a SharePoint List (or Dataverse table). Materials list becomes the lookup source for formulation lines.</li>
+<li>Power Apps form = the CMG template; R&amp;D and Finance screens show only their queue (filtered by status and role).</li>
+<li>Power Automate: on Submit → create audit row, email/Teams R&amp;D; on "Sent to Finance" → notify Finance; on Approve/Send back → notify CMG/R&amp;D. Use Approvals for sign-off with timestamp.</li>
+<li>Entra ID groups (CMG, R&amp;D, Finance-Factory, Admin) control who sees and edits what. Attachments stored in a SharePoint document library.</li></ul></div>
+<div class="card opt"><h3>Option B — Google Workspace (AppSheet or Sheets + Apps Script)</h3><ul>
+<li>One Google Sheet with a tab per table (or AppSheet database). AppSheet builds the form, queues and role views with little code.</li>
+<li>Automations send Gmail and Google Chat messages at each status change; timestamps and user email logged automatically.</li>
+<li>Google Groups for roles; attachments in a shared Drive folder. Good for speed; Sheets is less suited to very large volumes.</li></ul></div>
+<div class="card opt"><h3>Option C — Custom web app on Malee's server or cloud</h3><ul>
+<li>Postgres database (self-hosted or a managed service such as Supabase) plus an API; the prototype's screens are re-used and connected to it.</li>
+<li>Row-level security by role; SSO through Entra ID or Google; notifications via email, Teams or LINE webhooks.</li>
+<li>Most flexible (e.g. complex costing, ERP sync, dashboards) but needs a developer for build and maintenance.</li></ul></div>
+
+<div class="card"><h2 style="margin-top:0">5. ERP tie-in for material codes <span class="th">เชื่อมต่อ ERP</span></h2>
+<p>If Malee uses SAP or another ERP (confirm with IT), material codes, descriptions, units and standard costs should be <b>pulled from the ERP material master</b> rather than uploaded by hand — e.g. a scheduled export (daily CSV to SharePoint/Drive) or an API/connector (SAP has connectors for Power Automate; other ERPs typically offer exports or APIs). Benefits: one source of truth, current standard costs, no duplicate codes. The app keeps a read-only copy; R&amp;D can only pick active codes; Finance overrides are logged with a reason. Later, an approved costing could be written back to the ERP if IT wants.</p></div>
+
+<div class="card"><h2 style="margin-top:0">6. Step-by-step migration <span class="th">ขั้นตอนการย้ายระบบ</span></h2><ol>
+<li><b>Export the prototype data</b> — Admin → Data tools → <i>Export all data (JSON)</i>. Gives IT a working sample of every record type (mock data).</li>
+<li><b>Create the tables</b> on the chosen platform using the data model below.</li>
+<li><b>Load the full material code list</b> — CSV with columns <code>code, description, category, unit, std_cost_thb, supplier, active</code> (same format as the prototype's import), or connect the ERP feed.</li>
+<li><b>Set role permissions</b> — CMG creates/edits own requests; R&amp;D edits formulations; Finance edits costings; Admin manages materials and users; everyone read-only on audit log.</li>
+<li><b>Build notifications</b> at each status change (Submitted, Sent to Finance, Costing done, Returned).</li>
+<li><b>Pilot</b> one real CMG coconut request end-to-end with named users; compare with the email process; adjust fields.</li>
+<li><b>Go live</b> for coconut products; stop the email route; then add other product lines.</li></ol>
+<h3>Data model <span class="th">โครงสร้างข้อมูล</span></h3>
+<table><thead><tr><th>Table</th><th>Key fields</th></tr></thead><tbody>
+<tr><td><b>Requests</b></td><td>RequestID (CMG-YYYY-####), CreatedAt, CreatedBy, Status, ReturnedTo, StatusSince, Customer, Contact, ContactEmail, Market, Priority, ProductType, PackFormat, PackSize, PackUnit, UnitsPerCase, Brix, FatPct, pH, Sweetness, Flavour, ShelfLifeMonths, Storage, Claims, Allergen, Halal, OtherCerts, VolumePerYear, VolumeUnit, TargetPrice, Currency, PriceBasis, LaunchDate, AttachmentLinks, Notes</td></tr>
+<tr><td><b>Formulations</b></td><td>FormulationID, RequestID, Version, BatchKg, ProcessNotes, RnDNotes, CreatedBy, CreatedAt, SentToFinanceAt</td></tr>
+<tr><td><b>FormulationLines</b></td><td>LineID, FormulationID, LineType (Ingredient / Packaging), MatCode → Materials, PctWW, KgPerBatch, QtyPerUnit</td></tr>
+<tr><td><b>Materials</b></td><td>MatCode (key), Description, Category, Unit, StdCostTHB, Supplier, Active, Source (ERP/CSV), UpdatedAt</td></tr>
+<tr><td><b>Costings</b></td><td>CostingID, FormulationID, YieldLossPct, LabourPerUnit, OverheadPerUnit, OtherPackPerUnit, MarginPct, Overrides (MatCode, Cost, Reason), CostPerUnit, CostPerCase, PricePerUnit, Status, ApprovedBy, ApprovedAt, Comment</td></tr>
+<tr><td><b>AuditLog</b></td><td>AuditID, RequestID, Timestamp, User, Role, Action, Detail, NewStatus (append-only)</td></tr>
+<tr><td><b>Notifications</b></td><td>NotificationID, RequestID, ToRole / ToUser, Channel (in-app, email, Teams, LINE), Subject, Body, SentAt, ReadAt</td></tr>
+</tbody></table></div>
+
+<div class="card"><h2 style="margin-top:0">7. Security & data governance <span class="th">ความปลอดภัยและธรรมาภิบาลข้อมูล</span></h2><ul>
+<li><b>Keep real data internal.</b> Formulations and costs are confidential: host only on Malee's tenant/servers with company login. The current public GitHub page must stay mock-data only.</li>
+<li><b>Access by role</b> — least privilege; Finance cost data hidden from roles that don't need it (e.g. CMG sees approved price, not cost breakdown, if management prefers).</li>
+<li><b>Audit trail</b> — append-only log of who did what and when; formulation versions kept, not overwritten.</li>
+<li><b>PDPA</b> — the system holds personal data (staff names, customer contact names/emails): collect only what is needed, restrict access, set retention, and follow Malee's PDPA policy.</li>
+<li><b>Backups & retention</b> — platform backups; define how long requests and formulations are kept.</li></ul></div>
+
+<div class="card"><h2 style="margin-top:0">8. Questions for Malee IT <span class="th">คำถามสำหรับฝ่าย IT</span></h2><ol>
+<li>Is Malee on Microsoft 365, Google Workspace, or both? Which licences (Power Apps premium / Dataverse, AppSheet)?</li>
+<li>Which ERP holds the material master and standard costs (e.g. SAP or other)? Can it export daily or expose an API?</li>
+<li>How many material codes are in scope for coconut products, and who owns the standard cost updates?</li>
+<li>Preferred notification channel: Outlook email, Teams, LINE, or Google Chat?</li>
+<li>Are external parties (OEM customers) ever expected to log in, or internal staff only?</li>
+<li>Hosting / data-residency rules for confidential formulation and cost data?</li>
+<li>Who will support the app after go-live (IT, a citizen developer, or a vendor)?</li>
+<li>Any existing PDPA, document-control or ISO/FSSC procedures the trail must satisfy?</li></ol></div>
+<p class="small muted">Prepared as a planning aid alongside the mock-data prototype. Estimates are indicative and depend on the platform chosen and IT availability.</p>
+</main></body></html>

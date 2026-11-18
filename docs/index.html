@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Malee CMG → R&amp;D → Finance Workflow (prototype)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%230f6b4a'/><circle cx='50' cy='50' r='22' fill='%23fff8ec'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="demo-banner no-print">PROTOTYPE · MOCK DATA ONLY · ข้อมูลจำลอง — not real Malee data. Data is stored only in this browser (localStorage).</div>
+<header class="topbar no-print">
+  <div class="brand"><span class="logo"></span><div><b>Malee CMG Workflow</b><small>ระบบคำขอพัฒนาสินค้า OEM · Coconut</small></div></div>
+  <div class="top-right">
+    <label class="role-pick" title="Stand-in for real logins (SSO comes later)">Role / บทบาท
+      <select id="roleSel">
+        <option value="CMG">CMG (OEM team)</option>
+        <option value="RND">R&amp;D</option>
+        <option value="FIN">Finance – Factory</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </label>
+    <a class="btn sm sec" style="background:rgba(255,255,255,.95)" href="migration.html">Migration to Malee systems</a>
+    <button id="bell" class="bell" aria-label="Notifications">🔔<span id="bellCount" class="badge hidden">0</span></button>
+  </div>
+</header>
+<nav id="nav" class="nav no-print"></nav>
+<main id="view"></main>
+<div id="toast" class="toast hidden"></div>
+<footer class="foot no-print">Prototype for discussion. Role switcher stands in for logins — real SSO logins come later. Notifications are simulated in-app; see <a href="#/next">Next steps</a> for where real email / LINE / Teams plug in.</footer>
+<script src="app.js"></script>
+</body>
+</html>
